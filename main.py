@@ -43,11 +43,17 @@ my_playlist = sp.user_playlist_create(user=f"{user_id}", name=f"{year}: Top Trac
                                       description="OPTIONAL")
 # song uri/tracks list
 song_uri = []
-# loops and gets all URIs
+# loops and gets all URIs, if it dosent find song. pass
 for i in song_names:
-    track = sp.search(q=' track:' + i, type='track')
-    track_uri = (track["tracks"]["items"][0]["uri"])
-    song_uri.append(track_uri)
+    try:
+        track = sp.search(q=' track:' + i, type='track')
+        track_uri = (track["tracks"]["items"][0]["uri"])
+    except IndexError:
+        pass
+    finally:
+        song_uri.append(track_uri)
+
+
 
  # creates playlist from song_uri list. 
 sp.playlist_add_items(playlist_id=my_playlist["id"],items=song_uri)
